@@ -1,0 +1,33 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  username String   @unique
+  email    String   @unique
+  password String
+  recipes  Recipe[] @relation("UserRecipes")
+}
+
+model Recipe {
+  id             Int      @id @default(autoincrement())
+  title          String
+  ingredients    String
+  cooking_time   Int
+  difficulty     Difficulty
+  picture_of_food String?
+  userId         Int?
+  user           User?    @relation("UserRecipes", fields: [userId], references: [id])
+}
+
+enum Difficulty {
+  easy
+  medium
+  hard
+}
